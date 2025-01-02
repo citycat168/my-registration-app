@@ -1,16 +1,22 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
-import * as dotenv from 'dotenv';
+import dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import routes from './routes/index.js';
 
-// 載入環境變量
-dotenv.config();
+// 設置 __dirname（在 ES modules 中需要這樣設置）
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// 載入環境變數
+dotenv.config({ path: path.join(__dirname, '../.env') });
 
 const app = express();
 
-// MongoDB 連接字符串
-const MONGODB_URI = 'mongodb+srv://ironchen2000:0OIGJnbJGtPjaOik@cluster0.jkf1n.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
+// 從環境變數獲取 MongoDB 連接字符串
+const MONGODB_URI = process.env.MONGODB_URI;
 
 // 中間件配置
 app.use(cors());
@@ -36,7 +42,10 @@ app.use((err, req, res) => {
   });
 });
 
+// 從環境變數獲取端口
+const PORT = process.env.PORT || 3001;
+
 // 啟動服務器
-app.listen(3001, () => {
-  console.log('Server is running on port 3001');
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
