@@ -1,0 +1,75 @@
+Google APP scripts
+DoPost
+網頁應用程式
+key
+AKfycbwc3m8wGq91k0HjxEDAUSOzYA5INPbYQNE84y_kKfpZw_4m6nuNXWZg7oEpfipJ_AZCtw
+
+url
+https://script.google.com/macros/s/AKfycbwc3m8wGq91k0HjxEDAUSOzYA5INPbYQNE84y_kKfpZw_4m6nuNXWZg7oEpfipJ_AZCtw/exec
+
+資料庫
+https://script.google.com/macros/library/d/1Ugt5VOyvCFgxi35Yf3xGAQDKWXODnQRjhNze9daykZ0SKVVoBpmMnnEH/1
+
+
+
+部署ID
+AKfycbwlJBc0QKeLAD1wwjgCWJh8ShgYFxh9cGr7fwBlzQoqepCbx0WjeqjPoENlSAEc_WIAFQ
+
+網址
+https://script.google.com/macros/s/AKfycbwlJBc0QKeLAD1wwjgCWJh8ShgYFxh9cGr7fwBlzQoqepCbx0WjeqjPoENlSAEc_WIAFQ/exec
+
+
+
+Gait
+ID
+AKfycbzNBcvNIyu0xelSCQdAOp5JzO3k2F8wle-0L3lcglyUUT8NHf8rF8z7N8LVdT3PlixSfQ
+
+URL
+https://script.google.com/macros/s/AKfycbzNBcvNIyu0xelSCQdAOp5JzO3k2F8wle-0L3lcglyUUT8NHf8rF8z7N8LVdT3PlixSfQ/exec
+
+
+https://script.google.com/macros/s/AKfycbzfyPIr7qztGEa7H9M5cdAyEnEMm_yu9XqstOIjmU2h2E-XEhlbRX_LUim-SXLptyytug/exec
+
+https://script.google.com/macros/s/AKfycbzNBcvNIyu0xelSCQdAOp5JzO3k2F8wle-0L3lcglyUUT8NHf8rF8z7N8LVdT3PlixSfQ/exec
+
+
+https://script.google.com/macros/s/AKfycbzoei9RggGiKu9A9KxNF2ZeC_Gp6_gEHaqCjh41nNC0c4-MGOHGTur-hY8KoHQWNqlIPw/exec
+
+
+
+https://script.google.com/macros/s/AKfycbyIprMftBkBAfxUnysLapGve5c4_QEhoRAzCddo4KI2KDJhXyJihSelVQkbjZ0ZQtHm/exec
+
+https://script.google.com/macros/s/AKfycbyIprMftBkBAfxUnysLapGve5c4_QEhoRAzCddo4KI2KDJhXyJihSelVQkbjZ0ZQtHm/exec
+
+https://script.google.com/macros/s/AKfycbyIprMftBkBAfxUnysLapGve5c4_QEhoRAzCddo4KI2KDJhXyJihSelVQkbjZ0ZQtHm/exec
+
+https://script.google.com/macros/s/AKfycbyIprMftBkBAfxUnysLapGve5c4_QEhoRAzCddo4KI2KDJhXyJihSelVQkbjZ0ZQtHm/exec
+
+https://script.google.com/macros/s/AKfycbyIprMftBkBAfxUnysLapGve5c4_QEhoRAzCddo4KI2KDJhXyJihSelVQkbjZ0ZQtHm/exec
+
+https://script.google.com/macros/s/AKfycbz-klhD6Pp_WJngFgwOggDEiEouTna5aCR4geFJSne7xU1YCA6iErgpg3m9NB7lsDHw/exec
+https://script.google.com/macros/s/AKfycbz-klhD6Pp_WJngFgwOggDEiEouTna5aCR4geFJSne7xU1YCA6iErgpg3m9NB7lsDHw/exec
+
+
+https://script.google.com/macros/s/AKfycbwCsNl8-TjeiSbJd-xQ6ImHPTEiUNUDj7B_dUj8YvS_VhOCSxdx00SJtD_GSS2SC8iB/exec
+https://script.google.com/macros/s/AKfycbwCsNl8-TjeiSbJd-xQ6ImHPTEiUNUDj7B_dUj8YvS_VhOCSxdx00SJtD_GSS2SC8iB/exec
+https://script.google.com/macros/s/AKfycbxVXC_2kAmv1kQmVHx-E2v2mD4mdWfSujuMLrVLm8sZkMM5ZqsQB6_gtG5O3aK5fc9z/exec
+
+https://script.google.com/macros/s/AKfycbz-klhD6Pp_WJngFgwOggDEiEouTna5aCR4geFJSne7xU1YCA6iErgpg3m9NB7lsDHw/exec
+
+https://script.google.com/macros/s/AKfycbz-klhD6Pp_WJngFgwOggDEiEouTna5aCR4geFJSne7xU1YCA6iErgpg3m9NB7lsDHw/exec
+
+https://script.google.com/macros/s/AKfycbz-klhD6Pp_WJngFgwOggDEiEouTna5aCR4geFJSne7xU1YCA6iErgpg3m9NB7lsDHw/exec
+https://script.google.com/macros/s/AKfycbz-klhD6Pp_WJngFgwOggDEiEouTna5aCR4geFJSne7xU1YCA6iErgpg3m9NB7lsDHw/exec
+
+
+https://script.google.com/macros/s/AKfycbzvKAg7TfynBeeujRVxxGeHUozu6jTmKw4dk7nQguubqQwPVYGcbV6IHKP666KE-fZx/exec
+
+https://script.google.com/macros/s/AKfycbzvKAg7TfynBeeujRVxxGeHUozu6jTmKw4dk7nQguubqQwPVYGcbV6IHKP666KE-fZx/exec
+
+              <stop offset="0%" style={{ stopColor: '#DC2626' }} />  {/* 紅色 */}
+              <stop offset="20%" style={{ stopColor: '#DC2626' }} />  {/* 0.8 的位置 */}
+              <stop offset="20.001%" style={{ stopColor: '#FBBF24' }} />  {/* 黃色開始 */}
+              <stop offset="46.666%" style={{ stopColor: '#FBBF24' }} />  {/* 1.2 的位置 */}
+              <stop offset="46.667%" style={{ stopColor: '#34D399' }} />  {/* 綠色開始 */}
+              <stop offset="100%" style={{ stopColor: '#34D399' }} />  {/* 綠色 */}
