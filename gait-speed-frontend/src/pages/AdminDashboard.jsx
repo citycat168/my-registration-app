@@ -6,6 +6,7 @@ import UserListItem from '../components/UserListItem';
 import SpeedHistoryChart from '../components/SpeedHistoryChart';
 import UserListModal from '../components/UserListModal';
 import RegistrationModal from '../components/RegistrationModal';  // 新增
+import UserEditModal from '../components/UserEditModal';  // 新增
 import ExportCSVButton from '../components/ExportCSVButton';
 import { api } from '../services/api';
 
@@ -20,7 +21,8 @@ function AdminDashboard() {
   const [showRegistrationModal, setShowRegistrationModal] = useState(false);  // 新增
   const [gaitSpeed, setGaitSpeed] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editingUser, setEditingUser] = useState(null);
   const navigate = useNavigate();
 
   // 獨立的統計計算函數
@@ -190,6 +192,60 @@ const handleSubmitSpeed = async (e) => {
   }
 };
 
+// 添加編輯和刪除處理函數
+const handleEditUser = (user) => {
+  setEditingUser(user);
+  setShowEditModal(true);
+};
+
+const handleDeleteUser = async (username) => {
+  try {
+    const response = await fetch(`${process.env.REACT_APP_API_URL}/users/${username}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+
+    const result = await response.json();
+    
+    if (result.status === 'success') {
+      alert('用戶已成功刪除');
+      fetchUsers(); // 重新獲取用戶列表
+      if (selectedUser?.username === username) {
+        setSelectedUser(null); // 清除選中的用戶
+      }
+    } else {
+      throw new Error(result.message || '刪除失敗');
+    }
+  } catch (error) {
+    console.error('Error deleting user:', error);
+    alert('刪除失敗：' + error.message);
+  }
+};
+
+// 處理用戶資料更新
+const handleSaveUser = async (userData) => {
+  try {
+    // 使用現有的 updateProfile 方法
+    const result = await api.updateProfile(userData);
+    
+    if (result.status === 'success') {
+      alert('用戶資料已更新');
+      setShowEditModal(false);
+      fetchUsers(); // 重新獲取用戶列表
+      if (selectedUser?.username === userData.username) {
+        fetchUserData(userData.username); // 更新當前顯示的用戶資料
+      }
+    } else {
+      throw new Error(result.message || '更新失敗');
+    }
+  } catch (error) {
+    console.error('Error updating user:', error);
+    alert('更新失敗：' + error.message);
+  }
+};
+
   // 初始加載
   useEffect(() => {
     fetchUsers();
@@ -197,7 +253,7 @@ const handleSubmitSpeed = async (e) => {
     const interval = setInterval(() => {
       fetchUsers();
       fetchGlobalStats();
-    }, 30000); // 每30秒更新一次
+    }, 5*60*1000); // 每5分鐘更新一次
     return () => clearInterval(interval);
   }, [fetchUsers, fetchGlobalStats]);
 
@@ -246,6 +302,8 @@ const handleSubmitSpeed = async (e) => {
               isSelected={selectedUser?.username === user.username}
               isLoading={isLoading}
               onClick={fetchUserData}
+              onEdit={handleEditUser}
+              onDelete={handleDeleteUser}
             />
           ))}
         </div>
@@ -261,7 +319,7 @@ const handleSubmitSpeed = async (e) => {
               alt="步速記錄系統 Logo"
               className="h-10 w-auto"
             />
-            <h1 className="text-2xl font-bold text-gray-800">後台管理儀表板</h1>
+            <h1 className="text-2xl font-bold text-gray-800">步態管理儀表板</h1>
           </div>
           <div className="flex gap-4">
             <button
@@ -271,10 +329,16 @@ const handleSubmitSpeed = async (e) => {
               用戶資料清單
             </button>
             <button
-              onClick={() => navigate('/')}
+               onClick={() => {
+                // 清除管理員登入狀態
+                localStorage.removeItem('isAdmin');
+                localStorage.removeItem('adminToken');
+                // 導航到管理員登入頁面
+                navigate('/admin/login');
+              }}
               className="px-4 py-2 text-sm text-blue-600 hover:text-blue-700"
             >
-              返回
+              登出
             </button>
           </div>
         </div>
@@ -400,7 +464,7 @@ const handleSubmitSpeed = async (e) => {
       <UserListModal 
         isOpen={showUserList}
         onClose={() => setShowUserList(false)}
-        users={users}
+        users={users || []} 
       />
       
       <RegistrationModal
@@ -408,6 +472,15 @@ const handleSubmitSpeed = async (e) => {
         onClose={() => setShowRegistrationModal(false)}
         onRegisterSuccess={fetchUsers}
       />
+
+      {/* 添加 Modal */}
+    <UserEditModal
+      isOpen={showEditModal}
+      onClose={() => setShowEditModal(false)}
+      userData={editingUser}
+      onSave={handleSaveUser}
+    />
+
     </div>
   );
 }

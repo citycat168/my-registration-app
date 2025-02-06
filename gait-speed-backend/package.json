@@ -5,8 +5,9 @@
   "description": "Backend for gait speed tracking application",
   "main": "src/app.js",
   "scripts": {
-    "start": "node src/app.js",
-    "dev": "nodemon src/app.js"
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js",
+    "create-admin": "node scripts/createAdmin.js"
   },
   "keywords": [],
   "author": "",
@@ -15,8 +16,10 @@
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
-    "express": "^4.18.2",
-    "mongoose": "^7.0.3",
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^7.8.3",
+    "nodemailer": "^6.9.16",
     "validator": "^13.12.0"
   },
   "devDependencies": {
