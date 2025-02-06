@@ -38,7 +38,16 @@ const userSchema = new mongoose.Schema({
    emailVerificationExpires: {
      type: Date,
      select: false
-  },    
+  },
+  // 添加密碼重設相關欄位
+  resetPasswordToken: {
+    type: String,
+    select: false  // 在查詢時默認不返回這些欄位
+  },
+  resetPasswordExpires: {
+    type: Date,
+    select: false
+  },
   birthdate: {
     type: String,
     required: [true, '生日為必填欄位'],
@@ -89,5 +98,7 @@ const userSchema = new mongoose.Schema({
 userSchema.index({ username: 1 });
 userSchema.index({ phone: 1 });
 userSchema.index({ email: 1 });
+// 添加重設密碼 token 的索引以提升查詢效率
+userSchema.index({ resetPasswordToken: 1 });
 
 export default mongoose.model('User', userSchema);

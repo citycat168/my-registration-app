@@ -1,68 +1,99 @@
 import PropTypes from 'prop-types';
 
-const UserListModal = ({ isOpen, onClose, users }) => {
+const UserListModal = ({ isOpen, onClose, users = [] }) => {
   if (!isOpen) return null;
 
-    // 匯出 CSV 功能
-    const exportToCSV = () => {
-        // 定義 CSV 標頭
-        const headers = ['姓名', '機關單位', '手機', 'EMAIL', '生日'];
-        
-        // 準備資料行
-        const rows = users.map(user => [
-          user.name || '',
-          user.organization || '',
-          user.phone || '',
-          user.email || '',
-          user.birthdate || ''
-        ]);
+  // 添加保護性檢查
+  if (!Array.isArray(users)) {
+    console.error('Users prop is not an array:', users);
+    return null;
+  }
+  
+  // 匯出 CSV 功能
+  const exportToCSV = () => {
+    // 定義 CSV 標頭
+    const headers = ['姓名', '機關單位', '手機', 'EMAIL', '生日'];
+    
+    // 準備資料行
+    const rows = users.map(user => [
+      user.name || '',
+      user.organization || '',
+      user.phone || '',
+      user.email || '',
+      user.birthdate || ''
+    ]);
 
     // 組合 CSV 內容
     const csvContent = [
-        headers.join(','),
-        ...rows.map(row => row.join(','))
-      ].join('\n');
+      headers.join(','),
+      ...rows.map(row => row.join(','))
+    ].join('\n');
 
     // 加入 BOM 以確保 Excel 能正確顯示中文
     const BOM = '\uFEFF';
     const blob = new Blob([BOM + csvContent], { type: 'text/csv;charset=utf-8' });
 
-     // 建立下載連結
-     const url = window.URL.createObjectURL(blob);
-     const link = document.createElement('a');
-     link.href = url;
-     link.setAttribute('download', '用戶資料清單.csv');
-     
-     // 觸發下載
-     document.body.appendChild(link);
-     link.click();
-     document.body.removeChild(link);
-     window.URL.revokeObjectURL(url);
-   };
+    // 建立下載連結
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', '用戶資料清單.csv');
+    
+    // 觸發下載
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+  };
+
+  // 處理背景點擊關閉
+  const handleBackdropClick = (e) => {
+    console.log('Backdrop clicked');
+    if (e.target === e.currentTarget) {
+      console.log('Closing from backdrop');
+      onClose();
+    }
+  };
+
+  const handleCloseClick = (e) => {
+    console.log('Close button clicked');
+    e.stopPropagation();
+    onClose();
+  };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg p-6 w-full max-w-6xl max-h-[80vh] overflow-auto">
+    <div 
+      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+      onClick={handleBackdropClick}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="modal-title"
+    >
+      <div 
+        className="bg-white rounded-lg p-6 w-full max-w-6xl max-h-[80vh] overflow-auto"
+        onClick={e => e.stopPropagation()}
+      >
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-semibold">用戶資料清單</h2>
+          <h2 id="modal-title" className="text-xl font-semibold">用戶資料清單</h2>
           <div className="flex items-center gap-4">
-            {/* 新增匯出按鈕 */}
             <button
+              type="button"
               onClick={exportToCSV}
               className="px-4 py-2 text-sm bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
             >
               匯出 CSV
             </button>
-          <button 
-            onClick={onClose} 
-            className="text-gray-500 hover:text-gray-700"
-          >
-            <span className="text-2xl">&times;</span>
-          </button>
+            <button 
+              type="button"
+              onClick={handleCloseClick}
+              className="p-2 text-gray-500 hover:text-gray-700 rounded-full transition-colors"
+              aria-label="關閉視窗"
+            >
+              <span className="text-2xl block leading-none">&times;</span>
+            </button>
+          </div>
         </div>
-    </div>     
         
-        {/* 用戶資料表格 */}
         <div className="overflow-x-auto">
           <table className="min-w-full bg-white">
             <thead className="bg-gray-50">

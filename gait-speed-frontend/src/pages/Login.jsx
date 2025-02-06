@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useState } from 'react';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { api } from '../services/api';
 
 function Login() {
@@ -9,68 +9,114 @@ function Login() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
+  const [isForgotPassword, setIsForgotPassword] = useState(false);
+  const [resetMessage, setResetMessage] = useState('');
   const navigate = useNavigate();
+  const location = useLocation();
 
-  // 檢查是否已登入
-  useEffect(() => {
-    const username = localStorage.getItem('username');
-    if (username) {
-      navigate('/dashboard');
+  // 處理忘記密碼
+  const handleForgotPassword = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setError('');
+    setResetMessage('');
+
+    try {
+      if (!loginData.username) {
+        setError('請輸入帳號以重設密碼');
+        setIsSubmitting(false);
+        return;
+      }
+
+      const response = await api.requestPasswordReset(loginData.username);
+      
+      if (response.status === 'success') {
+        setResetMessage('重設密碼郵件已發送到您的信箱，請查收！');
+        setIsForgotPassword(false);
+      } else {
+        throw new Error(response.message || '重設密碼請求失敗');
+      }
+    } catch (error) {
+      console.error('Reset password error:', error);
+      setError(error.message || '重設密碼請求失敗，請稍後再試');
+    } finally {
+      setIsSubmitting(false);
     }
-  }, [navigate]);
+  };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
     setError('');
 
     try {
-      if (!loginData.username || !loginData.password) {
-        setError('請輸入用戶名和密碼');
+      if (!loginData.username || (!isForgotPassword && !loginData.password)) {
+        setError('請填寫所有必填欄位');
+        setIsSubmitting(false);
         return;
       }
 
-    // 呼叫登入 API
-    const response = await api.login(loginData);
+      if (isForgotPassword) {
+        return handleForgotPassword(e);
+      }
 
-    if (response.status === 'success') {
-      // 儲存用戶資訊
-      localStorage.setItem('username', loginData.username);
-      navigate('/dashboard');
-  } else {
-    throw new Error(response.message || '登入失敗');
-  }
-  } catch (error) {
-    console.error('Login error:', error);
-    setError(error.message || '登入失敗，請稍後再試');
-  } finally {
-    setIsSubmitting(false);
-  }
-};
+      const response = await api.login(loginData);
+
+      if (response.status === 'success') {
+        localStorage.setItem('username', loginData.username);
+        navigate('/dashboard');
+      } else {
+        throw new Error(response.message || '登入失敗');
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      setError(error.message || '登入失敗，請稍後再試');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            登入系統
-          </h2>
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full">
+        <div className="text-center mb-8">
+          <div className="flex flex-col items-center">
+            <img
+              className="h-20 w-auto mb-6 transform hover:scale-105 transition-transform duration-200"
+              src="/logo.png"
+              alt="KneeHow健康"
+            />
+            <div className="flex items-center gap-2">
+              <h2 className="text-3xl font-bold text-gray-900">
+                KneeHow健康
+              </h2>
+            </div>
+            <h3 className="mt-4 text-xl text-gray-600">
+              {isForgotPassword ? '重設密碼' : '會員登入'}
+            </h3>
+          </div>
         </div>
 
-        {error && (
-          <div className="rounded-md bg-red-50 p-4">
-            <div className="flex">
-              <div className="ml-3">
-                <h3 className="text-sm font-medium text-red-800">
-                  {error}
-                </h3>
-              </div>
+        <div className="bg-white p-8 rounded-lg shadow-md">
+          {location.state?.message && (
+            <div className="mb-4 p-4 bg-green-50 rounded-md text-green-700">
+              {location.state.message}
             </div>
-          </div>
-        )}
+          )}
 
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <div className="rounded-md shadow-sm -space-y-px">
+          {error && (
+            <div className="mb-4 bg-red-50 border-l-4 border-red-500 p-4">
+              <p className="text-red-700">{error}</p>
+            </div>
+          )}
+
+          {resetMessage && (
+            <div className="mb-4 p-4 bg-green-50 rounded-md">
+              <p className="text-green-700 text-sm">{resetMessage}</p>
+            </div>
+          )}
+
+          <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
               <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-1">
                 用戶名稱
@@ -81,51 +127,69 @@ function Login() {
                 required
                 value={loginData.username}
                 onChange={(e) => setLoginData(prev => ({ ...prev, username: e.target.value }))}
-                className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                 disabled={isSubmitting}
               />
             </div>
-            <div className="mt-4">
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
-                密碼
-              </label>
-              <input
-                id="password"
-                type="password"
-                required
-                value={loginData.password}
-                onChange={(e) => setLoginData(prev => ({ ...prev, password: e.target.value }))}
-                className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+
+            {!isForgotPassword && (
+              <div>
+                <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+                  密碼
+                </label>
+                <input
+                  id="password"
+                  type="password"
+                  required
+                  value={loginData.password}
+                  onChange={(e) => setLoginData(prev => ({ ...prev, password: e.target.value }))}
+                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                  disabled={isSubmitting}
+                />
+              </div>
+            )}
+
+            <div className="flex items-center justify-between">
+              <button
+                type="submit"
                 disabled={isSubmitting}
-              />
+                className="flex-1 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:bg-blue-400 disabled:cursor-not-allowed"
+              >
+                {isSubmitting 
+                  ? (isForgotPassword ? '發送中...' : '登入中...') 
+                  : (isForgotPassword ? '發送重設密碼郵件' : '登入')}
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setIsForgotPassword(!isForgotPassword);
+                  setError('');
+                  setResetMessage('');
+                  setLoginData(prev => ({ ...prev, password: '' }));
+                }}
+                className="ml-4 text-sm text-blue-600 hover:text-blue-500"
+              >
+                {isForgotPassword ? '返回登入' : '忘記密碼？'}
+              </button>
             </div>
-          </div>
+          </form>
+        </div>
 
-          <div>
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:bg-gray-400"
-            >
-              {isSubmitting ? '登入中...' : '登入'}
-            </button>
-          </div>
-
-          <div className="flex justify-between">
-            <Link 
-              to="/register" 
-              className="text-sm text-blue-600 hover:text-blue-500"
-            >
-              註冊新帳號
-            </Link>
-            <Link 
-              to="/admin/login" 
-              className="text-sm text-gray-600 hover:text-gray-500"
-            >
-              管理員入口
-            </Link>
-          </div>
-        </form>
+        <div className="mt-4 flex justify-between">
+          <Link 
+            to="/register" 
+            className="text-sm text-blue-600 hover:text-blue-500"
+          >
+            註冊新帳號
+          </Link>
+          <Link 
+            to="/admin/login" 
+            className="text-sm text-gray-600 hover:text-gray-500"
+          >
+            管理員入口
+          </Link>
+        </div>
       </div>
     </div>
   );
